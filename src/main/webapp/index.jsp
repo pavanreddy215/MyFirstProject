@@ -1,133 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NexusShop — Modern UI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexusShop</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --bg: #0f172a;
-    --primary: #ffffff;
-    --accent: #6366f1;
-    --accent2: #22c55e;
-    --muted: #94a3b8;
-    --glass: rgba(255,255,255,0.06);
-    --border: rgba(255,255,255,0.1);
+:root{
+    --primary:#6c63ff;
+    --secondary:#00c9a7;
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --green:#16a34a;
 }
 
-body {
-    margin: 0;
-    font-family: Inter;
-    background: var(--bg);
-    color: var(--primary);
+body{
+    margin:0;
+    font-family:Roboto;
+    background:var(--bg);
 }
 
 /* HEADER */
-header {
-    position: sticky;
-    top: 0;
-    backdrop-filter: blur(10px);
-    background: rgba(15,23,42,0.7);
-    border-bottom: 1px solid var(--border);
+header{
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    color:white;
+    padding:10px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.search input{
+    width:300px;
+    padding:8px;
+    border:none;
+    border-radius:4px;
 }
 
-.brand {
-    font-weight: 700;
-    font-size: 22px;
+/* CATEGORY BAR */
+.categories{
+    display:flex;
+    gap:20px;
+    background:white;
+    padding:10px 15px;
+    overflow-x:auto;
+    border-bottom:1px solid #ddd;
 }
 
-.accent {
-    color: var(--accent);
+.cat{
+    cursor:pointer;
+    font-size:14px;
+    color:var(--muted);
 }
 
-/* HERO */
-.hero {
-    text-align: center;
-    padding: 80px 20px;
-    background: radial-gradient(circle, rgba(99,102,241,0.4), transparent);
-}
-
-.hero h1 {
-    font-size: 48px;
-    background: linear-gradient(to right, #6366f1, #22c55e);
-    -webkit-background-clip: text;
-    color: transparent;
+.cat.active{
+    color:var(--primary);
+    font-weight:bold;
 }
 
 /* GRID */
-.grid {
-    display: grid;
-    gap: 20px;
-    padding: 40px;
-}
-
-.products {
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:15px;
+    padding:15px;
 }
 
 /* CARD */
-.card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 15px;
-    transition: 0.3s;
+.card{
+    background:var(--card);
+    padding:12px;
+    border-radius:8px;
+    transition:0.2s;
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+.card:hover{
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
 }
 
-.card img {
-    width: 100%;
-    border-radius: 12px;
-    transition: 0.3s;
+.card img{
+    width:100%;
+    height:160px;
+    object-fit:contain;
 }
 
-.card:hover img {
-    transform: scale(1.05);
+.title{
+    font-size:14px;
+    margin:8px 0;
 }
 
-/* BUTTON */
-button {
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: linear-gradient(135deg,#6366f1,#22c55e);
-    color: white;
-    font-weight: 600;
+.price{
+    font-weight:bold;
 }
 
-button:hover {
-    transform: translateY(-2px);
+.old{
+    text-decoration:line-through;
+    color:var(--muted);
+    font-size:12px;
 }
 
-/* PRICE */
-.price {
-    font-weight: bold;
-    margin-top: 10px;
+.rating{
+    background:var(--green);
+    color:white;
+    padding:2px 5px;
+    font-size:12px;
+    border-radius:3px;
 }
 
-/* SEARCH */
-.search input {
-    padding: 8px;
-    border-radius: 20px;
-    border: none;
-    outline: none;
+.actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8px;
+}
+
+button{
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+/* SIDEBARS */
+.cart, .wishlist{
+    position:fixed;
+    right:-350px;
+    top:0;
+    width:320px;
+    height:100%;
+    background:white;
+    transition:0.3s;
+    padding:15px;
+    box-shadow:-2px 0 10px rgba(0,0,0,0.2);
+}
+
+.active{
+    right:0;
+}
+
+.back{
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.wish.active{
+    color:red;
 }
 </style>
 </head>
@@ -135,51 +157,153 @@ button:hover {
 <body>
 
 <header>
-    <div class="container">
-        <div class="brand">Nexus<span class="accent">Shop</span></div>
-        <div class="search">
-            <input type="text" id="searchInput" placeholder="Search..." />
-        </div>
-    </div>
+<h2>NexusShop</h2>
+<div class="search">
+<input type="text" id="search" placeholder="Search products...">
+</div>
+<div>
+<span onclick="toggleWishlist()">❤️ <span id="wishCount">0</span></span>
+<span onclick="toggleCart()">🛒 <span id="cartCount">0</span></span>
+</div>
 </header>
 
-<section class="hero">
-    <h1>Premium Shopping Experience</h1>
-    <p>Modern UI with smooth design</p>
-</section>
+<!-- CATEGORY BAR -->
+<div class="categories" id="categories"></div>
 
-<section class="grid products" id="products"></section>
+<!-- PRODUCTS -->
+<section class="grid" id="products"></section>
+
+<!-- CART -->
+<div id="cart" class="cart">
+<span class="back" onclick="toggleCart()">← Back</span>
+<h3>Cart</h3>
+<div id="cartItems"></div>
+<h4>Total: ₹<span id="total">0</span></h4>
+<button onclick="checkout()">Place Order</button>
+</div>
+
+<!-- WISHLIST -->
+<div id="wishlist" class="wishlist">
+<span class="back" onclick="toggleWishlist()">← Back</span>
+<h3>Wishlist</h3>
+<div id="wishlistItems"></div>
+</div>
 
 <script>
-const PRODUCTS = [
-{ title:"iPhone 14", price:999, img:"https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb" },
-{ title:"MacBook", price:1999, img:"https://images.unsplash.com/photo-1593642632823-8f785ba67e45" },
-{ title:"Headphones", price:399, img:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" },
-{ title:"Shoes", price:150, img:"https://images.unsplash.com/photo-1542272604-787c3835535d" }
+const PRODUCTS=[
+{title:"iPhone 14",cat:"Mobiles",price:79999,old:89999,rating:4.6,img:"https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb"},
+{title:"Samsung S23",cat:"Mobiles",price:69999,old:79999,rating:4.5,img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"},
+{title:"MacBook Air",cat:"Laptops",price:99999,old:119999,rating:4.7,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8"},
+{title:"Dell Laptop",cat:"Laptops",price:59999,old:69999,rating:4.3,img:"https://images.unsplash.com/photo-1593642632823-8f785ba67e45"},
+{title:"Headphones",cat:"Electronics",price:2999,old:3999,rating:4.4,img:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519"},
+{title:"Nike Shoes",cat:"Fashion",price:4999,old:6999,rating:4.2,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"},
+{title:"Backpack",cat:"Fashion",price:999,old:1499,rating:4.1,img:"https://images.unsplash.com/photo-1551232864-3f0890e580d9"},
+{title:"Smart Watch",cat:"Electronics",price:3999,old:5999,rating:4.5,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"},
+{title:"Keyboard",cat:"Electronics",price:1499,old:1999,rating:4.3,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8"},
+{title:"Gaming Mouse",cat:"Electronics",price:899,old:1299,rating:4.2,img:"https://images.unsplash.com/photo-1587202372775-e229f172b9d7"}
 ];
 
-const grid = document.getElementById("products");
+let cart=[],wishlist=[],currentCat="All";
 
-function render(list){
-    grid.innerHTML = "";
-    list.forEach(p=>{
-        grid.innerHTML += `
+/* CATEGORIES */
+const cats=["All",...new Set(PRODUCTS.map(p=>p.cat))];
+const catEl=document.getElementById("categories");
+
+cats.forEach(c=>{
+    catEl.innerHTML+=`<div class="cat" onclick="filterCat('${c}')">${c}</div>`;
+});
+
+/* FILTER */
+function filterCat(c){
+    currentCat=c;
+    render();
+}
+
+/* RENDER */
+function render(){
+    const el=document.getElementById("products");
+    el.innerHTML="";
+    let list=PRODUCTS;
+
+    if(currentCat!=="All"){
+        list=list.filter(p=>p.cat===currentCat);
+    }
+
+    list.forEach((p,i)=>{
+        const w=wishlist.includes(i);
+        el.innerHTML+=`
         <div class="card">
-            <img src="${p.img}" />
-            <h3>${p.title}</h3>
-            <div class="price">$${p.price}</div>
-            <button>Add to Cart</button>
+            <img src="${p.img}">
+            <div class="title">${p.title}</div>
+            <div><span class="rating">${p.rating}★</span></div>
+            <div class="price">₹${p.price} <span class="old">₹${p.old}</span></div>
+            <div class="actions">
+                <button onclick="add(${i})">Add</button>
+                <span class="wish ${w?'active':''}" onclick="toggleWish(${i})">❤️</span>
+            </div>
         </div>`;
     });
 }
 
-render(PRODUCTS);
+/* CART */
+function add(i){
+    cart.push(PRODUCTS[i]);
+    updateCart();
+}
 
-// SEARCH
-document.getElementById("searchInput").addEventListener("input", e=>{
-    const q = e.target.value.toLowerCase();
+function updateCart(){
+    let total=0;
+    const el=document.getElementById("cartItems");
+    el.innerHTML="";
+    cart.forEach(p=>{
+        total+=p.price;
+        el.innerHTML+=`<div>${p.title} - ₹${p.price}</div>`;
+    });
+    document.getElementById("total").textContent=total;
+    document.getElementById("cartCount").textContent=cart.length;
+}
+
+function toggleCart(){
+    document.getElementById("cart").classList.toggle("active");
+}
+
+/* WISHLIST */
+function toggleWish(i){
+    if(wishlist.includes(i)){
+        wishlist=wishlist.filter(x=>x!==i);
+    } else wishlist.push(i);
+    updateWishlist();
+    render();
+}
+
+function updateWishlist(){
+    const el=document.getElementById("wishlistItems");
+    el.innerHTML="";
+    wishlist.forEach(i=>{
+        const p=PRODUCTS[i];
+        el.innerHTML+=`<div>${p.title}</div>`;
+    });
+    document.getElementById("wishCount").textContent=wishlist.length;
+}
+
+function toggleWishlist(){
+    document.getElementById("wishlist").classList.toggle("active");
+}
+
+/* SEARCH */
+document.getElementById("search").addEventListener("input",e=>{
+    const q=e.target.value.toLowerCase();
     render(PRODUCTS.filter(p=>p.title.toLowerCase().includes(q)));
 });
+
+/* CHECKOUT */
+function checkout(){
+    alert("Order placed successfully!");
+    cart=[];
+    updateCart();
+}
+
+render();
 </script>
 
 </body>
