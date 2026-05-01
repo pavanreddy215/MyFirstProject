@@ -3,23 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexusShop</title>
 
-<!-- Fonts -->
+<title>NexusShop Pro</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
-<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
-    --primary:#6c63ff;
-    --secondary:#00c9a7;
-    --bg:#f4f6fb;
-    --card:#fff;
-    --text:#1f2937;
-    --muted:#6b7280;
-    --green:#16a34a;
+    --primary:#ff6a00;
+    --secondary:#ee0979;
+    --bg:#f5f7fa;
 }
 
 body{
@@ -32,51 +26,16 @@ body{
 header{
     background:linear-gradient(90deg,var(--primary),var(--secondary));
     color:white;
-    padding:10px 20px;
+    padding:12px 20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
 }
 
-.search input{
-    width:300px;
-    padding:8px;
-    border:none;
-    border-radius:4px;
-}
-
-.header-icons{
+.icons{
     display:flex;
     gap:20px;
-    align-items:center;
     cursor:pointer;
-}
-
-.counter{
-    background:white;
-    color:black;
-    border-radius:50%;
-    padding:2px 6px;
-    font-size:12px;
-}
-
-/* CATEGORY */
-.categories{
-    display:flex;
-    gap:20px;
-    background:white;
-    padding:10px;
-    border-bottom:1px solid #ddd;
-}
-
-.cat{
-    cursor:pointer;
-    color:var(--muted);
-}
-
-.cat.active{
-    color:var(--primary);
-    font-weight:bold;
 }
 
 /* GRID */
@@ -87,59 +46,29 @@ header{
     padding:15px;
 }
 
-/* CARD */
 .card{
     background:white;
-    padding:12px;
-    border-radius:8px;
+    padding:10px;
+    border-radius:10px;
     transition:0.2s;
 }
 
 .card:hover{
-    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+    transform:scale(1.02);
 }
 
 .card img{
     width:100%;
-    height:160px;
-    object-fit:contain;
-}
-
-.title{
-    font-size:14px;
-    margin:8px 0;
-}
-
-.price{
-    font-weight:bold;
-}
-
-.old{
-    text-decoration:line-through;
-    color:var(--muted);
-    font-size:12px;
-}
-
-.rating{
-    background:var(--green);
-    color:white;
-    padding:2px 6px;
-    font-size:12px;
-    border-radius:3px;
-}
-
-.actions{
-    display:flex;
-    justify-content:space-between;
-    margin-top:8px;
+    height:150px;
+    object-fit:cover;
 }
 
 button{
-    background:var(--primary);
-    color:white;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
     border:none;
-    padding:6px 10px;
-    border-radius:4px;
+    color:white;
+    padding:5px 10px;
+    border-radius:5px;
     cursor:pointer;
 }
 
@@ -148,25 +77,43 @@ button{
     position:fixed;
     right:-350px;
     top:0;
-    width:320px;
+    width:350px;
     height:100%;
     background:white;
     transition:0.3s;
     padding:15px;
-    box-shadow:-2px 0 10px rgba(0,0,0,0.2);
+    overflow:auto;
 }
 
-.sidebar.active{
-    right:0;
+.sidebar.active{ right:0; }
+
+.cart-item{
+    display:flex;
+    gap:10px;
+    margin:10px 0;
 }
 
-.back{
+.cart-item img{
+    width:60px;
+}
+
+.remove{
+    color:red;
     cursor:pointer;
-    font-weight:bold;
+    font-size:12px;
+}
+
+.wish i{
+    cursor:pointer;
 }
 
 .wish.active i{
     color:red;
+}
+
+.spec{
+    font-size:12px;
+    color:gray;
 }
 </style>
 </head>
@@ -176,106 +123,101 @@ button{
 <header>
 <h2>NexusShop</h2>
 
-<div class="search">
-<input type="text" id="search" placeholder="Search products...">
-</div>
-
-<div class="header-icons">
+<div class="icons">
 <div onclick="toggleWishlist()">
 <i class="fa-solid fa-heart"></i>
-<span class="counter" id="wishCount">0</span>
+<span id="wishCount">0</span>
 </div>
 
 <div onclick="toggleCart()">
 <i class="fa-solid fa-cart-shopping"></i>
-<span class="counter" id="cartCount">0</span>
+<span id="cartCount">0</span>
 </div>
 </div>
 </header>
 
-<!-- CATEGORY -->
-<div class="categories" id="categories"></div>
-
-<!-- PRODUCTS -->
 <section class="grid" id="products"></section>
 
 <!-- CART -->
 <div id="cart" class="sidebar">
-<div class="back" onclick="toggleCart()">← Back</div>
+<div onclick="toggleCart()" style="cursor:pointer">
+<i class="fa-solid fa-arrow-left"></i> Back
+</div>
 <h3>Cart</h3>
 <div id="cartItems"></div>
 <h4>Total: ₹<span id="total">0</span></h4>
-<button onclick="checkout()">Place Order</button>
 </div>
 
 <!-- WISHLIST -->
 <div id="wishlist" class="sidebar">
-<div class="back" onclick="toggleWishlist()">← Back</div>
+<div onclick="toggleWishlist()">
+<i class="fa-solid fa-arrow-left"></i> Back
+</div>
 <h3>Wishlist</h3>
 <div id="wishlistItems"></div>
 </div>
 
 <script>
-const PRODUCTS=[
-{title:"iPhone 14",cat:"Mobiles",price:79999,old:89999,rating:4.6,img:"https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb"},
-{title:"Samsung S23",cat:"Mobiles",price:69999,old:79999,rating:4.5,img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"},
-{title:"MacBook Air",cat:"Laptops",price:99999,old:119999,rating:4.7,img:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8"},
-{title:"Dell Laptop",cat:"Laptops",price:59999,old:69999,rating:4.3,img:"https://images.unsplash.com/photo-1593642632823-8f785ba67e45"},
-{title:"Headphones",cat:"Electronics",price:2999,old:3999,rating:4.4,img:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519"},
-{title:"Nike Shoes",cat:"Fashion",price:4999,old:6999,rating:4.2,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
-];
 
-let cart=[],wishlist=[],currentCat="All";
+/* PRODUCTS WITH FULL SPECS */
+const PRODUCTS=[];
 
-/* CATEGORIES */
-const cats=["All",...new Set(PRODUCTS.map(p=>p.cat))];
-const catEl=document.getElementById("categories");
+for(let i=1;i<=20;i++){
+    PRODUCTS.push({
+        title:"Smart Device "+i,
+        price:1000 + i*300,
+        rating:(Math.random()*5).toFixed(1),
+        img:"https://source.unsplash.com/300x300?tech",
 
-cats.forEach(c=>{
-    catEl.innerHTML+=`<div class="cat" onclick="filterCat('${c}')">${c}</div>`;
-});
-
-/* FILTER */
-function filterCat(c){
-    currentCat=c;
-    document.querySelectorAll(".cat").forEach(el=>el.classList.remove("active"));
-    event.target.classList.add("active");
-    render();
+        specs:{
+            brand:"Nexus",
+            model:"NX-"+i,
+            ram:(4+(i%4)*2)+" GB",
+            storage:(64+(i%3)*64)+" GB",
+            display:"6."+((i%5)+1)+" inch",
+            battery:(3000+i*100)+" mAh",
+            warranty:"1 Year"
+        }
+    });
 }
 
-/* RENDER */
-function render(list){
+let cart=[];
+let wishlist=[];
+
+/* RENDER PRODUCTS */
+function render(){
     const el=document.getElementById("products");
     el.innerHTML="";
-    let data=list || PRODUCTS;
 
-    if(currentCat!=="All"){
-        data=data.filter(p=>p.cat===currentCat);
-    }
+    PRODUCTS.forEach((p,i)=>{
+        const inWish=wishlist.includes(i);
 
-    data.forEach((p,i)=>{
-        const w=wishlist.includes(i);
         el.innerHTML+=`
         <div class="card">
             <img src="${p.img}">
-            <div class="title">${p.title}</div>
+            <h4>${p.title}</h4>
+
             <div>
-                <span class="rating">${p.rating}</span>
-                <i class="fa-solid fa-star" style="color:#facc15"></i>
+                ${p.rating} ⭐
             </div>
-            <div class="price">₹${p.price} <span class="old">₹${p.old}</span></div>
-            <div class="actions">
-                <button onclick="add(${i})">Add</button>
-                <span class="wish ${w?'active':''}" onclick="toggleWish(${i})">
-                    <i class="fa-solid fa-heart"></i>
-                </span>
+
+            <p>₹${p.price}</p>
+
+            <div class="spec">
+                ${p.specs.ram} | ${p.specs.storage}
             </div>
+
+            <button onclick="addToCart(${i})">Add</button>
+
+            <span class="wish ${inWish?'active':''}" onclick="toggleWish(${i})">
+                <i class="fa-solid fa-heart"></i>
+            </span>
         </div>`;
     });
 }
 
 /* CART */
-function add(i){
+function addToCart(i){
     cart.push(PRODUCTS[i]);
     updateCart();
 }
@@ -284,12 +226,39 @@ function updateCart(){
     let total=0;
     const el=document.getElementById("cartItems");
     el.innerHTML="";
-    cart.forEach(p=>{
+
+    cart.forEach((p,index)=>{
         total+=p.price;
-        el.innerHTML+=`<div>${p.title} - ₹${p.price}</div>`;
+
+        el.innerHTML+=`
+        <div class="cart-item">
+            <img src="${p.img}">
+            <div>
+                <b>${p.title}</b><br>
+                ₹${p.price}<br>
+
+                <div class="spec">
+                    Brand: ${p.specs.brand}<br>
+                    Model: ${p.specs.model}<br>
+                    RAM: ${p.specs.ram}<br>
+                    Storage: ${p.specs.storage}<br>
+                    Display: ${p.specs.display}<br>
+                    Battery: ${p.specs.battery}<br>
+                    Warranty: ${p.specs.warranty}
+                </div>
+
+                <span class="remove" onclick="removeCart(${index})">Remove</span>
+            </div>
+        </div>`;
     });
+
     document.getElementById("total").textContent=total;
     document.getElementById("cartCount").textContent=cart.length;
+}
+
+function removeCart(i){
+    cart.splice(i,1);
+    updateCart();
 }
 
 function toggleCart(){
@@ -300,7 +269,9 @@ function toggleCart(){
 function toggleWish(i){
     if(wishlist.includes(i)){
         wishlist=wishlist.filter(x=>x!==i);
-    } else wishlist.push(i);
+    } else {
+        wishlist.push(i);
+    }
     updateWishlist();
     render();
 }
@@ -308,31 +279,37 @@ function toggleWish(i){
 function updateWishlist(){
     const el=document.getElementById("wishlistItems");
     el.innerHTML="";
+
     wishlist.forEach(i=>{
         const p=PRODUCTS[i];
-        el.innerHTML+=`<div>${p.title}</div>`;
+
+        el.innerHTML+=`
+        <div class="cart-item">
+            <img src="${p.img}">
+            <div>
+                ${p.title}<br>
+                ₹${p.price}<br>
+
+                <span class="remove" onclick="removeWish(${i})">Remove</span>
+            </div>
+        </div>`;
     });
+
     document.getElementById("wishCount").textContent=wishlist.length;
+}
+
+function removeWish(i){
+    wishlist=wishlist.filter(x=>x!==i);
+    updateWishlist();
+    render();
 }
 
 function toggleWishlist(){
     document.getElementById("wishlist").classList.toggle("active");
 }
 
-/* SEARCH */
-document.getElementById("search").addEventListener("input",e=>{
-    const q=e.target.value.toLowerCase();
-    render(PRODUCTS.filter(p=>p.title.toLowerCase().includes(q)));
-});
-
-/* CHECKOUT */
-function checkout(){
-    alert("Order placed successfully!");
-    cart=[];
-    updateCart();
-}
-
 render();
+
 </script>
 
 </body>
