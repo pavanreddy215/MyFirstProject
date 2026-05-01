@@ -4,38 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>NexusShop Pro</title>
+<title>NexusShop Fixed</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Font Awesome (optional fallback) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-:root{
-    --primary:#ff6a00;
-    --secondary:#ee0979;
-    --bg:#f5f7fa;
-}
-
 body{
     margin:0;
     font-family:Roboto;
-    background:var(--bg);
+    background:#f5f7fa;
 }
 
 /* HEADER */
 header{
-    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    background:linear-gradient(90deg,#ff6a00,#ee0979);
     color:white;
     padding:12px 20px;
     display:flex;
     justify-content:space-between;
-    align-items:center;
-}
-
-.icons{
-    display:flex;
-    gap:20px;
-    cursor:pointer;
 }
 
 /* GRID */
@@ -50,26 +39,12 @@ header{
     background:white;
     padding:10px;
     border-radius:10px;
-    transition:0.2s;
-}
-
-.card:hover{
-    transform:scale(1.02);
 }
 
 .card img{
     width:100%;
     height:150px;
     object-fit:cover;
-}
-
-button{
-    background:linear-gradient(90deg,var(--primary),var(--secondary));
-    border:none;
-    color:white;
-    padding:5px 10px;
-    border-radius:5px;
-    cursor:pointer;
 }
 
 /* SIDEBAR */
@@ -82,7 +57,6 @@ button{
     background:white;
     transition:0.3s;
     padding:15px;
-    overflow:auto;
 }
 
 .sidebar.active{ right:0; }
@@ -100,20 +74,6 @@ button{
 .remove{
     color:red;
     cursor:pointer;
-    font-size:12px;
-}
-
-.wish i{
-    cursor:pointer;
-}
-
-.wish.active i{
-    color:red;
-}
-
-.spec{
-    font-size:12px;
-    color:gray;
 }
 </style>
 </head>
@@ -123,16 +83,9 @@ button{
 <header>
 <h2>NexusShop</h2>
 
-<div class="icons">
-<div onclick="toggleWishlist()">
-<i class="fa-solid fa-heart"></i>
-<span id="wishCount">0</span>
-</div>
-
-<div onclick="toggleCart()">
-<i class="fa-solid fa-cart-shopping"></i>
-<span id="cartCount">0</span>
-</div>
+<div>
+<span onclick="toggleWishlist()">❤️ <span id="wishCount">0</span></span>
+<span onclick="toggleCart()">🛒 <span id="cartCount">0</span></span>
 </div>
 </header>
 
@@ -140,9 +93,7 @@ button{
 
 <!-- CART -->
 <div id="cart" class="sidebar">
-<div onclick="toggleCart()" style="cursor:pointer">
-<i class="fa-solid fa-arrow-left"></i> Back
-</div>
+<div onclick="toggleCart()">⬅ Back</div>
 <h3>Cart</h3>
 <div id="cartItems"></div>
 <h4>Total: ₹<span id="total">0</span></h4>
@@ -150,41 +101,40 @@ button{
 
 <!-- WISHLIST -->
 <div id="wishlist" class="sidebar">
-<div onclick="toggleWishlist()">
-<i class="fa-solid fa-arrow-left"></i> Back
-</div>
+<div onclick="toggleWishlist()">⬅ Back</div>
 <h3>Wishlist</h3>
 <div id="wishlistItems"></div>
 </div>
 
 <script>
 
-/* PRODUCTS WITH FULL SPECS */
-const PRODUCTS=[];
+/* SAFE IMAGE LIST */
+const IMAGES = [
+"https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519",
+"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+];
 
+/* PRODUCTS */
+const PRODUCTS=[];
 for(let i=1;i<=20;i++){
     PRODUCTS.push({
-        title:"Smart Device "+i,
-        price:1000 + i*300,
+        title:"Product "+i,
+        price:1000+i*200,
         rating:(Math.random()*5).toFixed(1),
-        img:"https://source.unsplash.com/300x300?tech",
-
+        img:IMAGES[i % IMAGES.length],
         specs:{
-            brand:"Nexus",
-            model:"NX-"+i,
-            ram:(4+(i%4)*2)+" GB",
-            storage:(64+(i%3)*64)+" GB",
-            display:"6."+((i%5)+1)+" inch",
-            battery:(3000+i*100)+" mAh",
-            warranty:"1 Year"
+            ram:"8GB",
+            storage:"128GB",
+            battery:"4000mAh"
         }
     });
 }
 
-let cart=[];
-let wishlist=[];
+let cart=[],wishlist=[];
 
-/* RENDER PRODUCTS */
+/* RENDER */
 function render(){
     const el=document.getElementById("products");
     el.innerHTML="";
@@ -194,30 +144,22 @@ function render(){
 
         el.innerHTML+=`
         <div class="card">
-            <img src="${p.img}">
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/150'">
             <h4>${p.title}</h4>
-
-            <div>
-                ${p.rating} ⭐
-            </div>
-
+            <div>${p.rating} ⭐</div>
             <p>₹${p.price}</p>
 
-            <div class="spec">
-                ${p.specs.ram} | ${p.specs.storage}
-            </div>
+            <button onclick="add(${i})">Add</button>
 
-            <button onclick="addToCart(${i})">Add</button>
-
-            <span class="wish ${inWish?'active':''}" onclick="toggleWish(${i})">
-                <i class="fa-solid fa-heart"></i>
+            <span onclick="toggleWish(${i})" style="color:${inWish?'red':'black'};cursor:pointer;">
+                ❤️
             </span>
         </div>`;
     });
 }
 
 /* CART */
-function addToCart(i){
+function add(i){
     cart.push(PRODUCTS[i]);
     updateCart();
 }
@@ -232,20 +174,13 @@ function updateCart(){
 
         el.innerHTML+=`
         <div class="cart-item">
-            <img src="${p.img}">
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/60'">
             <div>
-                <b>${p.title}</b><br>
+                ${p.title}<br>
                 ₹${p.price}<br>
-
-                <div class="spec">
-                    Brand: ${p.specs.brand}<br>
-                    Model: ${p.specs.model}<br>
-                    RAM: ${p.specs.ram}<br>
-                    Storage: ${p.specs.storage}<br>
-                    Display: ${p.specs.display}<br>
-                    Battery: ${p.specs.battery}<br>
-                    Warranty: ${p.specs.warranty}
-                </div>
+                RAM: ${p.specs.ram}<br>
+                Storage: ${p.specs.storage}<br>
+                Battery: ${p.specs.battery}<br>
 
                 <span class="remove" onclick="removeCart(${index})">Remove</span>
             </div>
@@ -269,9 +204,8 @@ function toggleCart(){
 function toggleWish(i){
     if(wishlist.includes(i)){
         wishlist=wishlist.filter(x=>x!==i);
-    } else {
-        wishlist.push(i);
-    }
+    } else wishlist.push(i);
+
     updateWishlist();
     render();
 }
@@ -282,14 +216,12 @@ function updateWishlist(){
 
     wishlist.forEach(i=>{
         const p=PRODUCTS[i];
-
         el.innerHTML+=`
         <div class="cart-item">
             <img src="${p.img}">
             <div>
                 ${p.title}<br>
                 ₹${p.price}<br>
-
                 <span class="remove" onclick="removeWish(${i})">Remove</span>
             </div>
         </div>`;
