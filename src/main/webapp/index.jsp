@@ -1,133 +1,99 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NexusShop — Modern UI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<title>NexusShop Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-:root {
-    --bg: #0f172a;
-    --primary: #ffffff;
-    --accent: #6366f1;
-    --accent2: #22c55e;
-    --muted: #94a3b8;
-    --glass: rgba(255,255,255,0.06);
-    --border: rgba(255,255,255,0.1);
+:root{
+    --primary:#ff6a00;
+    --secondary:#ee0979;
+    --bg:#f5f7fa;
 }
 
-body {
-    margin: 0;
-    font-family: Inter;
-    background: var(--bg);
-    color: var(--primary);
+body{
+    margin:0;
+    font-family:Roboto;
+    background:var(--bg);
 }
 
 /* HEADER */
-header {
-    position: sticky;
-    top: 0;
-    backdrop-filter: blur(10px);
-    background: rgba(15,23,42,0.7);
-    border-bottom: 1px solid var(--border);
+header{
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    color:white;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.brand {
-    font-weight: 700;
-    font-size: 22px;
-}
-
-.accent {
-    color: var(--accent);
-}
-
-/* HERO */
-.hero {
-    text-align: center;
-    padding: 80px 20px;
-    background: radial-gradient(circle, rgba(99,102,241,0.4), transparent);
-}
-
-.hero h1 {
-    font-size: 48px;
-    background: linear-gradient(to right, #6366f1, #22c55e);
-    -webkit-background-clip: text;
-    color: transparent;
+.icons{
+    display:flex;
+    gap:20px;
+    cursor:pointer;
 }
 
 /* GRID */
-.grid {
-    display: grid;
-    gap: 20px;
-    padding: 40px;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:15px;
+    padding:15px;
 }
 
-.products {
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+.card{
+    background:white;
+    padding:10px;
+    border-radius:10px;
 }
 
-/* CARD */
-.card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 15px;
-    transition: 0.3s;
+.card img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+button{
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    border:none;
+    color:white;
+    padding:5px 10px;
+    border-radius:5px;
+    cursor:pointer;
 }
 
-.card img {
-    width: 100%;
-    border-radius: 12px;
-    transition: 0.3s;
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    right:-350px;
+    top:0;
+    width:350px;
+    height:100%;
+    background:white;
+    transition:0.3s;
+    padding:15px;
+    overflow:auto;
 }
 
-.card:hover img {
-    transform: scale(1.05);
+.sidebar.active{ right:0; }
+
+.cart-item{
+    display:flex;
+    gap:10px;
+    margin:10px 0;
 }
 
-/* BUTTON */
-button {
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: linear-gradient(135deg,#6366f1,#22c55e);
-    color: white;
-    font-weight: 600;
+.cart-item img{
+    width:60px;
 }
 
-button:hover {
-    transform: translateY(-2px);
-}
-
-/* PRICE */
-.price {
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-/* SEARCH */
-.search input {
-    padding: 8px;
-    border-radius: 20px;
-    border: none;
-    outline: none;
+.remove{
+    color:red;
+    cursor:pointer;
 }
 </style>
 </head>
@@ -135,51 +101,160 @@ button:hover {
 <body>
 
 <header>
-    <div class="container">
-        <div class="brand">Nexus<span class="accent">Shop</span></div>
-        <div class="search">
-            <input type="text" id="searchInput" placeholder="Search..." />
-        </div>
-    </div>
+<h2>NexusShop</h2>
+
+<div class="icons">
+<div onclick="toggleWishlist()">
+<i class="fa-solid fa-heart"></i>
+<span id="wishCount">0</span>
+</div>
+
+<div onclick="toggleCart()">
+<i class="fa-solid fa-cart-shopping"></i>
+<span id="cartCount">0</span>
+</div>
+</div>
 </header>
 
-<section class="hero">
-    <h1>Premium Shopping Experience</h1>
-    <p>Modern UI with smooth design</p>
-</section>
+<section class="grid" id="products"></section>
 
-<section class="grid products" id="products"></section>
+<!-- CART -->
+<div id="cart" class="sidebar">
+<div onclick="toggleCart()">
+<i class="fa-solid fa-arrow-left"></i> Back
+</div>
+<h3>Cart</h3>
+<div id="cartItems"></div>
+<h4>Total: ₹<span id="total">0</span></h4>
+</div>
+
+<!-- WISHLIST -->
+<div id="wishlist" class="sidebar">
+<div onclick="toggleWishlist()">
+<i class="fa-solid fa-arrow-left"></i> Back
+</div>
+<h3>Wishlist</h3>
+<div id="wishlistItems"></div>
+</div>
 
 <script>
-const PRODUCTS = [
-{ title:"iPhone 14", price:999, img:"https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb" },
-{ title:"MacBook", price:1999, img:"https://images.unsplash.com/photo-1593642632823-8f785ba67e45" },
-{ title:"Headphones", price:399, img:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" },
-{ title:"Shoes", price:150, img:"https://images.unsplash.com/photo-1542272604-787c3835535d" }
-];
 
-const grid = document.getElementById("products");
+/* PRODUCTS */
+const PRODUCTS=[];
+for(let i=1;i<=20;i++){
+    PRODUCTS.push({
+        title:"Product "+i,
+        price:1000+i*200,
+        img:"https://source.unsplash.com/300x300?tech",
+        specs:"Premium quality product"
+    });
+}
 
-function render(list){
-    grid.innerHTML = "";
-    list.forEach(p=>{
-        grid.innerHTML += `
+let cart=[];
+let wishlist=[];
+
+/* RENDER PRODUCTS */
+function render(){
+    const el=document.getElementById("products");
+    el.innerHTML="";
+    PRODUCTS.forEach((p,i)=>{
+        const inWish=wishlist.includes(i);
+        el.innerHTML+=`
         <div class="card">
-            <img src="${p.img}" />
-            <h3>${p.title}</h3>
-            <div class="price">$${p.price}</div>
-            <button>Add to Cart</button>
+            <img src="${p.img}">
+            <h4>${p.title}</h4>
+            <p>₹${p.price}</p>
+
+            <button onclick="addToCart(${i})">Add</button>
+
+            <span onclick="toggleWish(${i})" style="cursor:pointer;color:${inWish?'red':'black'}">
+                <i class="fa-solid fa-heart"></i>
+            </span>
         </div>`;
     });
 }
 
-render(PRODUCTS);
+/* CART */
+function addToCart(i){
+    cart.push(PRODUCTS[i]);
+    updateCart();
+}
 
-// SEARCH
-document.getElementById("searchInput").addEventListener("input", e=>{
-    const q = e.target.value.toLowerCase();
-    render(PRODUCTS.filter(p=>p.title.toLowerCase().includes(q)));
-});
+function updateCart(){
+    let total=0;
+    const el=document.getElementById("cartItems");
+    el.innerHTML="";
+
+    cart.forEach((p,index)=>{
+        total+=p.price;
+        el.innerHTML+=`
+        <div class="cart-item">
+            <img src="${p.img}">
+            <div>
+                <div>${p.title}</div>
+                <div>₹${p.price}</div>
+                <div>${p.specs}</div>
+                <span class="remove" onclick="removeCart(${index})">Remove</span>
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("total").textContent=total;
+    document.getElementById("cartCount").textContent=cart.length;
+}
+
+function removeCart(i){
+    cart.splice(i,1);
+    updateCart();
+}
+
+function toggleCart(){
+    document.getElementById("cart").classList.toggle("active");
+}
+
+/* WISHLIST */
+function toggleWish(i){
+    if(wishlist.includes(i)){
+        wishlist=wishlist.filter(x=>x!==i);
+    } else {
+        wishlist.push(i);
+    }
+    updateWishlist();
+    render();
+}
+
+function updateWishlist(){
+    const el=document.getElementById("wishlistItems");
+    el.innerHTML="";
+
+    wishlist.forEach(i=>{
+        const p=PRODUCTS[i];
+        el.innerHTML+=`
+        <div class="cart-item">
+            <img src="${p.img}">
+            <div>
+                <div>${p.title}</div>
+                <div>₹${p.price}</div>
+                <span class="remove" onclick="removeWish(${i})">Remove</span>
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("wishCount").textContent=wishlist.length;
+}
+
+function removeWish(i){
+    wishlist=wishlist.filter(x=>x!==i);
+    updateWishlist();
+    render();
+}
+
+function toggleWishlist(){
+    document.getElementById("wishlist").classList.toggle("active");
+}
+
+render();
+
 </script>
 
 </body>
